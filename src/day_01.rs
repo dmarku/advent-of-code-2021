@@ -10,6 +10,8 @@ mod task_01 {
     #[cfg(test)]
     mod test {
         use super::count_increases;
+        use std::error::Error;
+        use crate::input::read_input;
 
         #[test]
         fn example() {
@@ -17,15 +19,9 @@ mod task_01 {
             assert_eq!(count_increases(depths), 7);
         }
 
-        use std::error::Error;
         #[test]
         fn task() -> Result<(), Box<dyn Error>> {
-            use std::fs;
-            use std::path::PathBuf;
-
-            let mut d = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
-            d.push("day_01_input.txt");
-            let input = fs::read_to_string(d)?;
+            let input = read_input("day_01_input.txt")?;
             let input: Vec<i32> = input.lines().map(|l| l.parse()).collect::<Result<_, _>>()?;
             let increases = count_increases(&input);
             assert_eq!(increases, 1215);
