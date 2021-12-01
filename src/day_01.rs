@@ -1,4 +1,4 @@
-mod task_01 {
+mod task_1 {
     fn count_increases(depths: &[i32]) -> usize {
         let pairs = depths.iter().zip(depths.iter().skip(1));
         let changes = pairs.map(|(a, b)| b - a);
