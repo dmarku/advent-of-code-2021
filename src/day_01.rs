@@ -10,8 +10,8 @@ mod task_1 {
     #[cfg(test)]
     mod test {
         use super::count_increases;
-        use std::error::Error;
         use crate::input::read_input;
+        use std::error::Error;
 
         #[test]
         fn example() {
@@ -45,10 +45,10 @@ mod task_2 {
     }
 
     #[cfg(test)]
-    mod test  {
-        use std::error::Error;
+    mod test {
         use super::count_increases;
         use crate::input::read_input;
+        use std::error::Error;
 
         #[test]
         fn example() {
@@ -59,10 +59,11 @@ mod task_2 {
         #[test]
         fn task() -> Result<(), Box<dyn Error>> {
             let input = read_input("day_01_input.txt")?;
-            let input: Vec<i32> = input.lines().map(|l| l.parse()).collect::<Result<_, _>>()?;
+            let input: Vec<i32> = input.lines().map(&str::parse).collect::<Result<_, _>>()?;
             let increases = count_increases(&input);
-
             assert_eq!(increases, 1150);
+
+            Ok(())
         }
     }
 }
