@@ -26,26 +26,6 @@ impl From<ParseIntError> for CommandParseError {
     }
 }
 
-#[derive(Debug)]
-struct Position {
-    horizontal: i32,
-    depth: i32,
-}
-
-impl Position {
-    fn new(horizontal: i32, depth: i32) -> Self {
-        Position { horizontal, depth }
-    }
-}
-
-fn navigate(pos: &Position, command: &Command) -> Position {
-    match command {
-        Command::Forward(d) => Position::new(pos.horizontal + d, pos.depth),
-        Command::Down(d) => Position::new(pos.horizontal, pos.depth + d),
-        Command::Up(d) => Position::new(pos.horizontal, pos.depth - d),
-    }
-}
-
 impl FromStr for Command {
     type Err = CommandParseError;
 
@@ -70,12 +50,51 @@ impl FromStr for Command {
     }
 }
 
+#[derive(Debug)]
+struct Position {
+    horizontal: i32,
+    depth: i32,
+}
+
+impl Position {
+    fn new(horizontal: i32, depth: i32) -> Self {
+        Position { horizontal, depth }
+    }
+}
+
+fn navigate(pos: &Position, command: &Command) -> Position {
+    match command {
+        Command::Forward(d) => Position::new(pos.horizontal + d, pos.depth),
+        Command::Down(d) => Position::new(pos.horizontal, pos.depth + d),
+        Command::Up(d) => Position::new(pos.horizontal, pos.depth - d),
+    }
+}
+
+#[derive(Debug)]
+struct Position2 {
+    horizontal: i32, depth: i32, aim: i32,
+}
+
+impl Position2 {
+    fn new(horizontal: i32, depth: i32, aim: i32) -> Self {
+        Self { horizontal, depth, aim }
+    }
+}
+
+fn navigate2(pos: &Position2, command: &Command) -> Position2 {
+    match command {
+        Command::Forward(d) => Position2::new(pos.horizontal + d, pos.depth + pos.aim * d, pos.aim),
+        Command::Down(d) => Position2 { aim: pos.aim + d, ..*pos },
+        Command::Up(d) => Position2 { aim: pos.aim - d, ..*pos },
+    }
+}
+
 mod task_01 {
     // implementation goes here
 
     #[cfg(test)]
     mod test {
-        use super::super::{navigate, Command, Position};
+        use crate::day_02::{navigate, Command, Position};
         use crate::input::read_input;
         use std::error::Error;
 
@@ -112,20 +131,32 @@ mod task_02 {
 
     #[cfg(test)]
     mod test {
+        use crate::day_02::{Command, Position2, navigate2};
         use crate::input::read_input;
         use std::error::Error;
 
         #[test]
-        fn example() {}
+        fn example() -> Result<(), Box<dyn Error>>{
+            let input = read_input("inputs/day_02/example_01.txt")?;
+            let commands: Vec<Command> =
+                input.lines().map(&str::parse).collect::<Result<_, _>>()?;
+            let position = commands
+                .iter()
+                .fold(Position2::new(0, 0, 0), |pos, cmd| navigate2(&pos, &cmd));
+            assert_eq!(position.horizontal * position.depth, 900);
+
+            Ok(())
+        }
 
         #[test]
         fn task() -> Result<(), Box<dyn Error>> {
-            // let solution = /* ... */
-            // output result for input to AoC website
-            // println!("result: {}", result);
-
-            // once the solution is correct, assert it in test results
-            // assert_eq!(solution, /* expected result */);
+            let input = read_input("inputs/day_02/input.txt")?;
+            let commands: Vec<Command> =
+                input.lines().map(&str::parse).collect::<Result<_, _>>()?;
+            let position = commands
+                .iter()
+                .fold(Position2::new(0, 0, 0), |pos, cmd| navigate2(&pos, &cmd));
+            assert_eq!(position.horizontal * position.depth, 1281977850);
 
             Ok(())
         }
