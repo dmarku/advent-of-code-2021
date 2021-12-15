@@ -100,7 +100,7 @@ mod task_01 {
 
         #[test]
         fn example() -> Result<(), Box<dyn Error>> {
-            let input = read_input("inputs/day_02/example_01.txt")?;
+            let input = read_input("inputs/day_02/example.txt")?;
             let commands: Vec<Command> =
                 input.lines().map(&str::parse).collect::<Result<_, _>>()?;
             let final_position = commands
@@ -137,7 +137,7 @@ mod task_02 {
 
         #[test]
         fn example() -> Result<(), Box<dyn Error>>{
-            let input = read_input("inputs/day_02/example_01.txt")?;
+            let input = read_input("inputs/day_02/example.txt")?;
             let commands: Vec<Command> =
                 input.lines().map(&str::parse).collect::<Result<_, _>>()?;
             let position = commands
