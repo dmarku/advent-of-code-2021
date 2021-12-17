@@ -72,20 +72,32 @@ fn navigate(pos: &Position, command: &Command) -> Position {
 
 #[derive(Debug)]
 struct Position2 {
-    horizontal: i32, depth: i32, aim: i32,
+    horizontal: i32,
+    depth: i32,
+    aim: i32,
 }
 
 impl Position2 {
     fn new(horizontal: i32, depth: i32, aim: i32) -> Self {
-        Self { horizontal, depth, aim }
+        Self {
+            horizontal,
+            depth,
+            aim,
+        }
     }
 }
 
 fn navigate2(pos: &Position2, command: &Command) -> Position2 {
     match command {
         Command::Forward(d) => Position2::new(pos.horizontal + d, pos.depth + pos.aim * d, pos.aim),
-        Command::Down(d) => Position2 { aim: pos.aim + d, ..*pos },
-        Command::Up(d) => Position2 { aim: pos.aim - d, ..*pos },
+        Command::Down(d) => Position2 {
+            aim: pos.aim + d,
+            ..*pos
+        },
+        Command::Up(d) => Position2 {
+            aim: pos.aim - d,
+            ..*pos
+        },
     }
 }
 
@@ -131,12 +143,12 @@ mod task_02 {
 
     #[cfg(test)]
     mod test {
-        use crate::day_02::{Command, Position2, navigate2};
+        use crate::day_02::{navigate2, Command, Position2};
         use crate::input::read_input;
         use std::error::Error;
 
         #[test]
-        fn example() -> Result<(), Box<dyn Error>>{
+        fn example() -> Result<(), Box<dyn Error>> {
             let input = read_input("inputs/day_02/example.txt")?;
             let commands: Vec<Command> =
                 input.lines().map(&str::parse).collect::<Result<_, _>>()?;
